@@ -87,6 +87,13 @@
        <xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.SelectCollectionStep</xmlui-binding>
        <workflow-editable>false</workflow-editable>
      </step>
+
+     <step id="watermark">
+         <heading>submit.progressbar.watermark</heading>
+         <processing-class>org.dspace.submit.step.WatermarkStep</processing-class>
+         <xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.WatermarkStep</xmlui-binding>
+         <workflow-editable>true</workflow-editable>
+     </step>
      
 	 <!-- Uncomment this to make available the bibliographic import from external source - note ONLY for JSPUI -->     
 	 <!-- <step id="collection">
@@ -180,7 +187,7 @@
    <submission-process name="traditional">
      
      <!--Uncommment to display the SAMPLE step as your first step-->
-     <!--<step id="sample"/>-->
+     <!-- <step id="sample"/>-->
 
 	 <!-- Step 1. Since DSpace 4.0, the initial questions has been disabled. Metadata are shown exactly as 
 	 	  required in input-forms and items are assumed to have always multiple-files attached.
@@ -247,6 +254,9 @@
        </step>
        -->
 
+       <!--Step 4 will be to allow watermarking of this item -->
+       <step id="watermark"/>
+
  	  <!--Step 5 will be to Verify/Review everything -->
  	  <step>
         <heading>submit.progressbar.verify</heading>
@@ -277,8 +287,6 @@
 		<workflow-editable>false</workflow-editable>
       </step>
 
-
-     
    </submission-process>
 
  </submission-definitions>
