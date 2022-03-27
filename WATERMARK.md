@@ -1,0 +1,83 @@
+
+# DSPACE WATERMARK FEATURE
+
+
+The DSpace code, together with the watermark customization for dspace 6.3 is deployed and can be cloned from github using thefollowing command
+
+````
+git clone -b otuoma/add-watermark https://github.com/otuoma/DSpace.git
+````
+## Files Added
+The following new classes have been added. You don't need to change anything in these two files
+
+### 1. WatermarkStep.java | [See here ](https://github.com/otuoma/DSpace/blob/4b94e98f0ac1fb82264905f9f3feb2dc2e5a6e8e/dspace-api/src/main/java/org/dspace/submit/step/WatermarkStep.java)
+
+````
+dspace-api/src/main/java/org/dspace/submit/step/WatermarkStep.java
+````
+
+### 2. WatermarkStep.java | [See here](https://github.com/otuoma/DSpace/blob/otuoma/add-watermark/dspace-xmlui/src/main/java/org/dspace/app/xmlui/aspect/submission/submit/WatermarkStep.java)
+````
+dspace-xmlui/src/main/java/org/dspace/app/xmlui/aspect/submission/submit/WatermarkStep.java
+````
+
+## Installation Instructions
+Begin by cloning the dspace code from the branch `otuoma/add-watermark` as shown below;
+
+````
+git clone -b otuoma/add-watermark https://github.com/otuoma/DSpace.git
+````
+
+Install all the dspace prerequisite software as shown in the official documentation at [Installing DSpace](https://wiki.lyrasis.org/display/DSDOC6x/Installing+DSpace).
+
+Then inside the directory `dspace/config`, edit the file `local.cfg` and add the location of the watermark 
+image. Place the image anywhere on the file system as long as you provide the 
+correct path to it using the following setting in `local.cfg`
+
+````
+watermark.image = ${dspace.dir}/webapps/xmlui/static/images/hyperlink-logo.png
+````
+The file `dspace/config/item-submission.xml` is already updated this the following code
+
+````
+<step id="watermark">
+<heading>submit.progressbar.watermark</heading>
+<processing-class>org.dspace.submit.step.WatermarkStep</processing-class>
+<xmlui-binding>org.dspace.app.xmlui.aspect.submission.submit.WatermarkStep</xmlui-binding>
+<workflow-editable>true</workflow-editable>
+</step>
+````
+
+and 
+
+````
+<step id="watermark"/>
+````
+
+To disable watermarking, comment out the above last bit of code.
+
+Then run the following command to compile the code.
+
+````
+mvn package -Dmirage2.deps.included=false
+````
+
+If you don't need Mirage2 theme, simply run the following command instead.
+
+````
+mvn package
+````
+
+Then move to the compiled code directory
+
+````
+cd dspace/target/dspace-installer
+````
+
+Then run the following command to deploy the code for tomcat consumption.
+
+````
+ant fresh_install
+````
+
+Follow up with the dspace documentation to complete the installation process.
