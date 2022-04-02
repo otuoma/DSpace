@@ -1,5 +1,11 @@
 
-# DSPACE WATERMARK FEATURE
+# DSPACE 6.3 WATERMARK AND SECURITY FEATURES
+
+This branch includes modifications to dspace such as
+1. Add a watermark step to the submission step in XMLUI to allow watermarking uploaded PDFs
+2. Add security features such as prevent printing, copy-pasting and other additional features to the PDF bitstreams
+3. Add a PDF viewer to the item-view.xsl page with no options for download, print or presentation 
+mode 
 
 
 The DSpace code, together with the watermark customization for dspace 6.3 is deployed and can be cloned from github using thefollowing command

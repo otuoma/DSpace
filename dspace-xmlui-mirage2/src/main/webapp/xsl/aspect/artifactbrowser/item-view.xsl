@@ -126,6 +126,7 @@
                     <xsl:call-template name="itemSummaryView-DIM-abstract"/>
                     <xsl:call-template name="itemSummaryView-DIM-URI"/>
                     <xsl:call-template name="itemSummaryView-collections"/>
+                    <xsl:call-template name="itemSummaryView-bitstream"/>
                 </div>
             </div>
         </div>
@@ -400,6 +401,41 @@
         </xsl:choose>
     </xsl:template>
 
+    <!-- DISPLAY the PDF in HTML -->
+    <xsl:template name="itemSummaryView-bitstream">
+
+        <!-- Primary bitstream is always first fptr child of mets:div[@TYPE='DSpace Item'] -->
+        <xsl:variable name="primaryBitstream" select="//mets:structMap[@TYPE='LOGICAL']/mets:div[@TYPE='DSpace Item']/mets:fptr/@FILEID"/>
+
+        <xsl:for-each select="//mets:fileSec/mets:fileGrp[@USE='CONTENT' or @USE='ORIGINAL' or @USE='LICENSE']/mets:file">
+
+            <xsl:variable name="mimeType" select="@MIMETYPE" />
+            <xsl:variable name="bitstreamUrl" select="mets:FLocat[@LOCTYPE='URL']/@xlink:href" />
+
+            <xsl:if test="$mimeType = 'application/pdf'">
+                <div class="pdf_obj item-page-field-wrapper table">
+                    <xsl:element name="iframe">
+                        <xsl:attribute name="src">
+                            <xsl:value-of select="concat($theme-path, 'pdf-js/web/viewer.html?file=', $bitstreamUrl)" />
+                        </xsl:attribute>
+                        <xsl:attribute name="width">
+                            <xsl:text>100%</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="height">
+                            <xsl:text>650</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="style">
+                            <xsl:text>border: none;</xsl:text>
+                        </xsl:attribute>
+                    </xsl:element>
+                </div>
+
+            </xsl:if>
+
+        </xsl:for-each>
+
+    </xsl:template>
+
     <xsl:template name="itemSummaryView-DIM-file-section-entry">
         <xsl:param name="href" />
         <xsl:param name="mimetype" />
@@ -410,9 +446,11 @@
         <xsl:param name="size" />
         <div>
             <a>
+                <!--
                 <xsl:attribute name="href">
                     <xsl:value-of select="$href"/>
                 </xsl:attribute>
+                //-->
                 <xsl:call-template name="getFileIcon">
                     <xsl:with-param name="mimetype">
                         <xsl:value-of select="substring-before($mimetype,'/')"/>

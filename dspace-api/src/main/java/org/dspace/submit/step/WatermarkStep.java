@@ -6,6 +6,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.dspace.app.util.SubmissionInfo;
@@ -29,10 +31,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class WatermarkStep extends AbstractProcessingStep {
 
@@ -43,6 +42,7 @@ public class WatermarkStep extends AbstractProcessingStep {
 
     String uploadDir = configurationService.getProperty("upload.temp.dir");
     String watermark_image = configurationService.getProperty("watermark.image");
+    String pdfPassword = configurationService.getProperty("pdf.watermark.password");
 
     @Override
     public int doProcessing(Context context, HttpServletRequest request, HttpServletResponse response, SubmissionInfo subInfo) throws ServletException, IOException, SQLException, AuthorizeException {
@@ -59,21 +59,19 @@ public class WatermarkStep extends AbstractProcessingStep {
 
             Item item = subInfo.getSubmissionItem().getItem();
 
+            generateWatermarkPdf(watermark_image);
+
+            File watermarkSourceFile = new File(uploadDir + "/tmp_watermark.pdf");
+
+            PDDocument watermarkPdf = PDDocument.load( watermarkSourceFile );
+
             List<Bundle> bundles = itemService.getBundles(item, "ORIGINAL");
 
-            if (bundles.size() > 0){
+            for (Bundle bundle : bundles) {
 
-                generateWatermarkPdf(watermark_image);
+                List<Bitstream> bitstreams = bundle.getBitstreams();
 
-                File watermarkSourceFile = new File(uploadDir + "/tmp_watermark.pdf");
-
-                PDDocument watermarkPdf = PDDocument.load( watermarkSourceFile );
-
-                java.util.List<Bitstream> bitstreams = new ArrayList<>();
-
-                bitstreams = bundles.get(0).getBitstreams();
-
-                for (Bitstream bitstream : bitstreams) {
+                for (Bitstream bitstream : bitstreams){
 
                     String name = bitstream.getName();
                     String description = bitstream.getDescription();
@@ -81,27 +79,43 @@ public class WatermarkStep extends AbstractProcessingStep {
 
                     BitstreamFormat format = bitstream.getFormat(context);
 
-                    if( format.getMIMEType().equalsIgnoreCase("application/pdf") ){
-//
+                    if (format.getMIMEType().equalsIgnoreCase("application/pdf")) {
+
                         InputStream inputStream = bitstreamService.retrieve(context, bitstream);
 
                         PDDocument pdDocument = PDDocument.load(inputStream);
 
-                        try{
+                        try {
 
                             // Get the pages and create a map with page number and the image to
                             // be water marked.
-                            HashMap<Integer, PDDocument> overlayProps = new HashMap<>();
+                            HashMap<Integer, String> overlayProps = new HashMap<>();
 
                             for (int i = 0; i < pdDocument.getNumberOfPages(); i++) {
 
-                                overlayProps.put(i + 1, watermarkPdf);
+                                overlayProps.put(i + 1, uploadDir + "/tmp_watermark.pdf");
                             }
 
                             Overlay overlay = new Overlay();
                             overlay.setInputPDF(pdDocument);
                             overlay.setOverlayPosition(Overlay.Position.BACKGROUND);
-                            overlay.overlayDocuments(overlayProps);
+                            overlay.overlay(overlayProps);
+
+                            //ADD access security
+                            AccessPermission ap = new AccessPermission();
+                            ap.setCanModify(false);
+
+                            ap.setCanExtractContent(false);
+                            ap.setCanExtractForAccessibility(false);
+                            ap.setCanPrint(false);
+                            ap.setCanPrintDegraded(false);
+                            ap.setCanFillInForm(false);
+                            ap.setCanModifyAnnotations(false);
+
+                            StandardProtectionPolicy spp = new StandardProtectionPolicy(
+                                    UUID.randomUUID().toString(), "", ap);
+
+                            pdDocument.protect(spp);
 
                             pdDocument.save(uploadDir + "/watermarked_" + name);
 
@@ -109,7 +123,7 @@ public class WatermarkStep extends AbstractProcessingStep {
 
                             FileInputStream fileInputStream = new FileInputStream(newPdf);
 
-                            Bitstream newBitstream = bitstreamService.create(context,bundles.get(0), fileInputStream);
+                            Bitstream newBitstream = bitstreamService.create(context, fileInputStream);
 
                             newBitstream.setName(context, "watermarked_" + name);
 
@@ -118,33 +132,38 @@ public class WatermarkStep extends AbstractProcessingStep {
                             newBitstream.setSource(context, fileSource);
 
                             // Identify the format
-//                            BitstreamFormat bf = bitstreamFormatService.guessFormat(context, newBitstream);
                             newBitstream.setFormat(context, format);
 
                             // Update to DB
                             bitstreamService.update(context, newBitstream);
+
                             itemService.update(context, item);
+
+                            //Add new bitstream to the bundle
+                            bundleService.addBitstream(context, bundle, newBitstream);
 
                             // DELETE the old bitstream
                             bitstreamService.delete(context, bitstream);
 
+                            // DELETE tmp file from disk
                             newPdf.delete();
 
-                        } catch (IOException e){
+                        } catch (IOException e) {
 
                             e.printStackTrace();
                         }
 
                         inputStream.close();
                         pdDocument.close();
-                        watermarkPdf.close();
 
                     }
 
                 } //end for loop
-
-                watermarkSourceFile.delete(); //delete from disk
             }
+            watermarkPdf.close();
+
+            watermarkSourceFile.delete(); //delete from disk
+//            }
         }
 
         return 0;
