@@ -88,10 +88,10 @@ ant fresh_install
 
 Follow up with the dspace documentation to complete the installation process.
 
-### Collection Re-Authentication Settings #####
-Create any dspace object and copy the resource's URI starting with the handle and add it the list below in local.cfg.
+### Resource Re-Authentication Settings #####
+Create any dspace object and copy the resource's URI starting with the handle and add it to the list as shown below in local.cfg.
 
-Separate each resource with a space. Any URL pattern added here will force users to re-authenticate.
+Separate each resource's URL with a space. Any URL pattern added here will force users to re-authenticate.
 
 ```
 reauthentication.patterns = handle/123456789/2 handle/123456789/3 handle/123456789/32
