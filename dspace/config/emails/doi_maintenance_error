@@ -12,7 +12,7 @@
 ##
 #set($subject = "DSpace: Error ${params[0]} DOI ${params[3]}")
 
-Date:    ${params[1]}
+التاريخ:    ${params[1]}
 
-${params[0]} DOI ${params[4]} for ${params[2]} with ID ${params[3]} failed:
+${params[0]} المعرف الرقمي ${params[4]} لـ ${params[2]} بالمعرف ${params[3]} فشل:
 ${params[5]}

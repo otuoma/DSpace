@@ -9,12 +9,12 @@
 ## See org.dspace.core.Email for information on the format of this file.
 ##
 #set($subject = 'DSpace: Harvesting Error')
-Collection ${params[0]} failed on harvest:
+فشلت مجموعة ${params[0]} في الحصاد:
 
-Date:       	${params[1]}
-Status Flag: 	${params[2]}
+التاريخ:       	${params[1]}
+علامة الحالة: 	${params[2]}
 
 ${params[3]}
 
-Exception:
+الاستثناء:
 ${params[4]}

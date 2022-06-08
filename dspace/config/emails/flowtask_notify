@@ -9,15 +9,15 @@
 ##
 #set($subject = 'DSpace: Curation Task Report')
 
-Title:         ${params[0]}
-Collection:    ${params[1]}
-Submitted by:  ${params[2]}
+العنوان:         ${params[0]}
+المجموعة:    ${params[1]}
+مرسل من قبل:  ${params[2]}
 
-Curation task ${params[3]} has been performed
-with the following result:
+تم تنفيذ مهمة التنظيم ${params[3]}
+بالنتيجة التالية:
 
 ${params[4]}
 
-Action taken on the submission: ${params[5]}
+الإجراء المتخذ بشأن عملية الإرسال: ${params[5]}
 
 DSpace

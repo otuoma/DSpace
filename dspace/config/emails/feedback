@@ -12,15 +12,15 @@
 ##
 #set($subject = 'Feedback Form Information')
 
-Comments:
+التعليقات:
 
 ${params[6]}
 
 
-Date: ${params[0]}
-Email: ${params[1]}
-Logged In As: ${params[2]}
-Referring Page: ${params[3]}
-User Agent: ${params[4]}
-Session: ${params[5]}
+التاريخ: ${params[0]}
+البريد الإلكتروني: ${params[1]}
+تسجيل دخولك: ${params[2]}
+الصفحة المرجعية: ${params[3]}
+عامل المستخدم: ${params[4]}
+الجلسة: ${params[5]}
 

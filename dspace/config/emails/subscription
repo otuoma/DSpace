@@ -5,7 +5,7 @@
 ## See org.dspace.core.Email for information on the format of this file.
 ##
 $set($subject = 'DSpace Subscription')
-New items are available in the collections you have subscribed to:
+تتوفر عناصر جديدة في المجموعات التي اشتركت فيها:
 
 ${params[0]}
 

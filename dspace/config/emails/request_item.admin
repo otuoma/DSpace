@@ -10,9 +10,9 @@
 ##
 #set($subject = 'Request for Open Access')
 
-${params[3]}, with address ${params[4]},
-requested the following document/file to be in Open Access:
+${params[3]}، بالعنوان ${params[4]}،
+طلب المستند/الملف التالي ليكون في الوصول المفتوح:
 
-Document Handle:${params[1]}
-File ID: ${params[0]}
-Token:${params[2]}
+معالجة المستند:${params[1]}
+معرف الملف: ${params[0]}
+الرمز:${params[2]}

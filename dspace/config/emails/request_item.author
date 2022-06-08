@@ -1,17 +1,17 @@
 #set($subject = 'Request copy of document')
 
-Dear ${params[7]},
+العزيز/ة ${params[7]}،
 
-A user of ${params[9]}, named ${params[0]} and using the email ${params[1]}, requested a copy of the file(s) associated with the document: "${params[4]}" (${params[3]}) submitted by you.
+طلب المستخدم ${params[9]}، المسمى ${params[0]} وباستخدام البريد الإلكتروني ${params[1]}، نسخة من الملف (الملفات) المقترنة بالمستند: "${params[4]}" (${params[3]}) المقدم بواسطتك.
 
-This request came along with the following message:
+جاء هذا الطلب مصحوبًا بالرسالة التالية:
 
 "${params[5]}"
 
-To answer, click ${params[6]}. Whether you choose to grant or deny the request, we think that it''s in your best interest to respond.
+للإجابة، انقر فوق ${params[6]}. سواء اخترت الموافقة على الطلب أو رفضه، نعتقد أنه من مصلحتك الرد.
 
-IF YOU ARE NOT AN AUTHOR OF THIS DOCUMENT, and only submitted the document on the author''s behalf, PLEASE REDIRECT THIS MESSAGE TO THE AUTHOR(S).  Only the author(s) should answer the request to send a copy.
+إذا لم تكن مؤلف هذا المستند، وأرسلت المستند نيابة عن المؤلف فقط، فيرجى إعادة توجيه هذه الرسالة إلى المؤلف (المؤلفين). يجب على المؤلف (المؤلفين) فقط الرد على طلب إرسال نسخة.
 
-IF YOU ARE AN AUTHOR OF THE REQUESTED DOCUMENT, thank you for your cooperation!
+إذا كنت مؤلف المستند المطلوب، شكرًا لك على تعاونك!
 
-If you have any questions concerning this request, please contact ${params[10]}.
+إذا كانت لديك أية أسئلة بخصوص هذا الطلب، فيرجى الاتصال بـ ${params[10]}.
