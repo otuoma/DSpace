@@ -37,8 +37,6 @@ displays the login page. It then checks the username and password entered by the
 if they are correct. If they are correct, it allows the user to proceed but if wrong it gives feedback to
 the user to give the correct username and password. It makes use of the dspace 6.3 REST API.
 
-YES. The two files can easily be combined into one but ....
-
 ## Installation Instructions
 Begin by cloning the dspace code from the branch `otuoma/add-watermark` as shown below;
 
