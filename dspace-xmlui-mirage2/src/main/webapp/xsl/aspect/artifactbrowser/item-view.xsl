@@ -404,38 +404,23 @@
     <!-- DISPLAY the PDF in HTML -->
     <xsl:template name="itemSummaryView-bitstream">
 
-        <!-- Primary bitstream is always first fptr child of mets:div[@TYPE='DSpace Item'] -->
-        <xsl:variable name="primaryBitstream" select="//mets:structMap[@TYPE='LOGICAL']/mets:div[@TYPE='DSpace Item']/mets:fptr/@FILEID"/>
+        <div id="bitstreamWrapper">
 
-        <xsl:for-each select="//mets:fileSec/mets:fileGrp[@USE='CONTENT' or @USE='ORIGINAL' or @USE='LICENSE']/mets:file">
+            <xsl:variable name="primaryBitstream" select="//mets:structMap[@TYPE='LOGICAL']/mets:div[@TYPE='DSpace Item']/mets:fptr/@FILEID"/>
 
-            <xsl:variable name="mimeType" select="@MIMETYPE" />
-            <xsl:variable name="bitstreamUrl" select="mets:FLocat[@LOCTYPE='URL']/@xlink:href" />
+            <xsl:for-each select="//mets:fileSec/mets:fileGrp[@USE='CONTENT' or @USE='ORIGINAL' or @USE='LICENSE']/mets:file">
 
-            <xsl:if test="$mimeType = 'application/pdf' and position() = 1">
-                <div class="pdf_obj item-page-field-wrapper table">
-                    <xsl:element name="iframe">
+                <xsl:variable name="mimeType" select="@MIMETYPE" />
+                <xsl:variable name="bitstreamUrl" select="mets:FLocat[@LOCTYPE='URL']/@xlink:href" />
+                <xsl:if test="$mimeType = 'application/pdf' and contains(mets:FLocat[@LOCTYPE='URL']/@xlink:href,'isAllowed=y')">
+                    <xsl:element name="div">
                         <xsl:attribute name="id">
-                            <xsl:text>bitstreamIframe</xsl:text>
-                        </xsl:attribute>
-                        <xsl:attribute name="src">
                             <xsl:value-of select="concat($theme-path, 'pdf-js/web/viewer.html?file=', $bitstreamUrl)" />
                         </xsl:attribute>
-                        <xsl:attribute name="width">
-                            <xsl:text>100%</xsl:text>
-                        </xsl:attribute>
-                        <xsl:attribute name="height">
-                            <xsl:text>650</xsl:text>
-                        </xsl:attribute>
-                        <xsl:attribute name="style">
-                            <xsl:text>border: none;</xsl:text>
-                        </xsl:attribute>
                     </xsl:element>
-                </div>
-
-            </xsl:if>
-
-        </xsl:for-each>
+                </xsl:if>
+            </xsl:for-each>
+        </div>
 
     </xsl:template>
 
