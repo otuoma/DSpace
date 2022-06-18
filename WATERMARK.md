@@ -75,7 +75,7 @@ To disable watermarking, comment out the above last bit of code.
 Then run the following command to compile the code.
 
 ````
-mvn package -Dmirage2.deps.included=false
+mvn package -Dmirage2.on=true -Dmirage2.deps.included=false
 ````
 
 If you don't need Mirage2 theme, simply run the following command instead.

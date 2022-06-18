@@ -405,11 +405,8 @@
     <xsl:template name="itemSummaryView-bitstream">
 
         <div id="bitstreamWrapper">
-
             <xsl:variable name="primaryBitstream" select="//mets:structMap[@TYPE='LOGICAL']/mets:div[@TYPE='DSpace Item']/mets:fptr/@FILEID"/>
-
             <xsl:for-each select="//mets:fileSec/mets:fileGrp[@USE='CONTENT' or @USE='ORIGINAL' or @USE='LICENSE']/mets:file">
-
                 <xsl:variable name="mimeType" select="@MIMETYPE" />
                 <xsl:variable name="bitstreamUrl" select="mets:FLocat[@LOCTYPE='URL']/@xlink:href" />
                 <xsl:if test="$mimeType = 'application/pdf' and contains(mets:FLocat[@LOCTYPE='URL']/@xlink:href,'isAllowed=y')">
