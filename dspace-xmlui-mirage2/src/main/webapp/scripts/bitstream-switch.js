@@ -54,5 +54,22 @@ window.addEventListener("load", function () {
 		bitstreamWrapper.innerHTML = "";
 		loadBitstream( idVal );
 	}
+	
+	bitstreamWrapper.addEventListener('copy', (event) => {
+	    event.preventDefault();
+	});
+	
+	bitstreamWrapper.addEventListener('cut', (event) => {
+	    event.preventDefault();
+	});
+	
+	window.addEventListener('beforeprint', (event) => {
+	  event.preventDefault();
+	});
 
 });
+
+window.addEventListener('beforeprint', (event) => {
+	  event.preventDefault();
+	});
+
