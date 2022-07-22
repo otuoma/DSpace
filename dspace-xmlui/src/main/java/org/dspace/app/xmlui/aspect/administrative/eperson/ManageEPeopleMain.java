@@ -116,11 +116,11 @@ public class ManageEPeopleMain extends AbstractDSpaceTransformer
     public void addBody(Body body) throws WingException, SQLException 
     {
         /* Get and setup our parameters */
-        int page          = parameters.getParameterAsInteger("page",0);
-        String highlightID   = parameters.getParameter("highlightID",null);
-        String query      = decodeFromURL(parameters.getParameter("query",null));
-        String baseURL    = contextPath+"/admin/epeople?administrative-continue="+knot.getId();
-        int resultCount   = ePersonService.searchResultCount(context, query);
+        int page           = parameters.getParameterAsInteger("page",0);
+        String highlightID = parameters.getParameter("highlightID",null);
+        String query       = decodeFromURL(parameters.getParameter("query",null));
+        String baseURL     = contextPath+"/admin/epeople?administrative-continue="+knot.getId();
+        int resultCount    = ePersonService.searchResultCount(context, query);
         java.util.List<EPerson> epeople = ePersonService.search(context, query, page*PAGE_SIZE, PAGE_SIZE);
 
 
