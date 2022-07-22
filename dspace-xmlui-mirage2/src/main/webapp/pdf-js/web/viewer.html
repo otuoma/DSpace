@@ -37,6 +37,24 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 
   <script src="viewer.js"></script>
+    <style media="print">
+      * { display: none; }
+    </style>
+    <script>
+      window.onbeforeprint = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+      };
+
+      document.onkeydown = (e)=>{
+        if(e.ctrlKey && (e.which === 83)) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      }
+    </script>
   </head>
 
   <body tabindex="1">
