@@ -8,6 +8,7 @@
 package org.dspace.app.util;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -118,6 +119,12 @@ public class SyndicationFeed
 
     // metadata field for Item dc:author field in entry's DCModule (no default)
     protected String dcDescriptionField = configurationService.getProperty("webui.feed.item.dc.description");
+    protected String dcPublisherField = configurationService.getProperty("webui.feed.item.dc.publisher");
+    protected String dcTypeField = configurationService.getProperty("webui.feed.item.dc.type");
+    protected String dcURIField = configurationService.getProperty("webui.feed.item.dc.identifier.uri");
+    protected String dcCitationField = configurationService.getProperty("webui.feed.item.dc.identifier.citation");
+    protected String dcDateIssuedField = configurationService.getProperty("webui.feed.item.dc.date.issued");
+    protected String dcSubjectField = configurationService.getProperty("webui.feed.item.dc.date.issued");
 
     // List of available mimetypes that we'll add to podcast feed. Multiple values separated by commas
     protected String[] podcastableMIMETypes =
@@ -172,8 +179,7 @@ public class SyndicationFeed
      * @param labels label map
      */
     public void populate(HttpServletRequest request, Context context, DSpaceObject dso,
-                         List<?extends DSpaceObject> items, Map<String, String> labels)
-    {
+                         List<?extends DSpaceObject> items, Map<String, String> labels) throws SQLException {
         String logoURL = null;
         String objectURL = null;
         String defaultTitle = null;
@@ -213,6 +219,7 @@ public class SyndicationFeed
                     podcastFeed = true;
                 }
             }
+
             objectURL = resolveURL(request, dso);
             if (logo != null)
             {
@@ -330,50 +337,68 @@ public class SyndicationFeed
                 }
 
                 // only add DC module if any DC fields are configured
-                if (dcCreatorField != null || dcDateField != null ||
-                    dcDescriptionField != null)
-                {
-                    DCModule dc = new DCModuleImpl();
-                    if (dcCreatorField != null)
-                    {
-                        List<MetadataValue> dcAuthors = itemService.getMetadataByMetadataString(item, dcCreatorField);
-                        if (dcAuthors.size() > 0)
-                        {
-                            List<String> creators = new ArrayList<String>();
-                            for (MetadataValue author : dcAuthors)
-                            {
-                                creators.add(author.getValue());
-                            }
-                            dc.setCreators(creators);
+                DCModule dc = new DCModuleImpl();
+                if (dcCreatorField != null) {
+                    List<MetadataValue> dcAuthors = itemService.getMetadataByMetadataString(item, dcCreatorField);
+                    if (dcAuthors.size() > 0) {
+                        List<String> creators = new ArrayList<String>();
+                        for (MetadataValue author : dcAuthors) {
+                            creators.add(author.getValue());
                         }
+                        dc.setCreators(creators);
                     }
-                    if (dcDateField != null && !hasDate)
-                    {
-                        List<MetadataValue> v = itemService.getMetadataByMetadataString(item, dcDateField);
-                        if (v.size() > 0)
-                        {
-                            dc.setDate((new DCDate(v.get(0).getValue())).toDate());
-                        }
-                    }
-                    if (dcDescriptionField != null)
-                    {
-                        List<MetadataValue> v = itemService.getMetadataByMetadataString(item, dcDescriptionField);
-                        if (v.size() > 0)
-                        {
-                            StringBuffer descs = new StringBuffer();
-                            for (MetadataValue d : v)
-                            {
-                                if (descs.length() > 0)
-                                {
-                                    descs.append("\n\n");
-                                }
-                                descs.append(d.getValue());
-                            }
-                            dc.setDescription(descs.toString());
-                        }
-                    }
-                    entry.getModules().add(dc);
                 }
+                if (dcURIField != null) {
+                    List<MetadataValue> dcURIs = itemService.getMetadataByMetadataString(item, dcURIField);
+                    if (dcURIs.size() > 0) {
+                        List<String> URIs = new ArrayList<String>();
+                        for (MetadataValue uri : dcURIs) {
+                            URIs.add(uri.getValue());
+                        }
+                        dc.setSubjects(URIs);
+                    }
+                }
+                if (dcSubjectField != null) {
+                    List<MetadataValue> dcSubjects = itemService.getMetadataByMetadataString(item, dcSubjectField);
+                    if (dcSubjects.size() > 0) {
+                        List<String> subjects = new ArrayList<String>();
+                        for (MetadataValue subject : dcSubjects) {
+                            subjects.add(subject.getValue());
+                        }
+                        dc.setSubjects(subjects);
+                    }
+                }
+                if (dcDateField != null && !hasDate) {
+                    List<MetadataValue> v = itemService.getMetadataByMetadataString(item, dcDateField);
+                    if (v.size() > 0) {
+                        dc.setDate((new DCDate(v.get(0).getValue())).toDate());
+                    }
+                }
+                if (dcDescriptionField != null) {
+                    List<MetadataValue> v = itemService.getMetadataByMetadataString(item, dcDescriptionField);
+                    if (v.size() > 0) {
+                        StringBuffer descs = new StringBuffer();
+                        for (MetadataValue d : v) {
+                            if (descs.length() > 0) {
+                                descs.append("\n\n");
+                            }
+                            descs.append(d.getValue());
+                        }
+                        dc.setDescription(descs.toString());
+                    }
+                }
+                List<Bundle> bitstreamBundles = itemService.getBundles(item, Constants.DEFAULT_BUNDLE_NAME);
+                if (bitstreamBundles.size() > 0){
+                    for (Bundle bundle: bitstreamBundles){
+                        Bitstream primaryBitstream = bundle.getPrimaryBitstream();
+                        String bitstreamName = primaryBitstream.getName();
+                        String bitstreamURL = primaryBitstream.getHandle();
+                    }
+
+                }
+
+                entry.getModules().add(dc);
+
 
                 //iTunes Podcast Support - START
                 if (podcastFeed)
