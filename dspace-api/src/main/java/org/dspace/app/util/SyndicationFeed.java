@@ -178,7 +178,7 @@ public class SyndicationFeed
      * @param labels label map
      */
     public void populate(HttpServletRequest request, Context context, DSpaceObject dso,
-                         List<?extends DSpaceObject> items, Map<String, String> labels) throws SQLException {
+                         List<?extends DSpaceObject> items, Map<String, String> labels) {
         String logoURL = null;
         String objectURL = null;
         String defaultTitle = null;
@@ -355,7 +355,12 @@ public class SyndicationFeed
                         orphanFields.put("programs", dcRelationPrograms);
                     }
                 }
-                List<Bundle> bitstreamBundles = itemService.getBundles(item, Constants.DEFAULT_BUNDLE_NAME);
+                List<Bundle> bitstreamBundles = null;
+                try {
+                    bitstreamBundles = itemService.getBundles(item, Constants.DEFAULT_BUNDLE_NAME);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 if (bitstreamBundles.size() > 0){
                     Map<String, String> bitstreams = new HashMap<>();
                     for (Bundle bundle: bitstreamBundles){
