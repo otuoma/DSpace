@@ -375,7 +375,7 @@ public class SyndicationFeed
                     }
                 }
 
-                entry.setForeignMarkup(orphanFields);
+                //entry.setForeignMarkup(orphanFields);
 
                 // ADD DC fields that are defined ###
                 DCModule dc = new DCModuleImpl();
