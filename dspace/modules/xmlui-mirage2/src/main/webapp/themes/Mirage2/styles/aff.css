@@ -1,0 +1,176 @@
+:root {
+  --bright-blue: #00ADEF;
+  --orange: #FA931D;
+  --warm-yellow: #FCB913;
+  --bright-yellow: #FFF32B;
+  --dark-grey: #999999;
+  --light-grey: #E6E7E9;
+  --dark-green: #549433;
+  --light-green: #8DC73F;
+
+}
+body{background-color: #e1e1e1;}
+#main-container {
+  background-color: white;
+}
+header{margin-top: 2.143rem;}
+header .navbar-brand img {
+  height: 80px;
+  border-radius: 50%;
+  padding: 4px;
+  background: white;
+}
+a {
+  color: var(--orange);
+}
+a.list-group-item {
+  color: var(--orange);
+}
+header .navbar-default {
+  min-height: 110px;
+  background:url("/themes/Mirage2/images/aff_nav_banner.png");
+  
+}
+.h5{font-weight: bold; font-size:16px;}
+.trail-wrapper {
+  background-color: var(--light-green);
+}
+.trail-wrapper, header .navbar-default {
+  margin: auto auto;
+}
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+  background-color: var(--light-green);
+  border-color: var(--light-green);
+  border-bottom: solid 4px var(--light-green);
+}
+header .navbar {
+  color: #fff;
+}
+.center{text-align:center;}
+.mt-5{margin-top:10px;}
+.btn-primary {
+  background-color: var(--orange);
+  border-color: var(--orange);
+}
+header .navbar-default .navbar-toggle > li > a:hover, header .navbar-default .navbar-toggle > li > a:focus, header .navbar-default .navbar-nav > li > a:hover, header .navbar-default .navbar-nav > li > a:focus {
+  background-color: transparent;
+}
+header .navbar-default .navbar-toggle:hover, header .navbar-default .navbar-toggle:focus, header .navbar-default .navbar-nav:hover, 
+header .navbar-default .navbar-nav:focus {
+      background-color: none; 
+}
+
+#file_news_div_news {
+    background: #fff url(/themes/Mirage2/images/aff_banner.png);
+    border-radius: 0px;
+    background-repeat: no-repeat;
+    padding: 30px;
+    min-height: 300px;
+    margin-bottom: 20px;
+}
+.main-content {
+  padding-top: 15px;
+}
+.first-page-header {
+  margin-top: 0;
+  padding-top: 0px;
+  border-bottom: none;
+}
+/*
+.ds-paragraph {
+  font-size: medium;
+  text-align: justify;
+  line-height: 1.5;
+  background: var(--light-grey);
+  padding: 8px;
+}
+*/
+#header-text{
+  text-align: center; 
+  vertical-align:middle;
+  padding:15px;
+  font-size:17px;
+  display:none;
+}
+#aspect_artifactbrowser_ConfigurableBrowse_div_browse-navigation .row .ds-static-div .ds-paragraph{display:none;}
+
+footer {
+  margin-bottom: -30px;
+}
+footer .row {
+  padding:12px;
+  background: url("/themes/Mirage2/images/bg-infocus.jpg");
+  position: relative;
+  width:100%;
+}
+
+.trail-wrapper .breadcrumb li a{color:white;}
+
+.community-browser-row {
+ 
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+}
+.community-browser-row a[name="community-browser-link"] {
+  line-height: 25px;
+  font-size: 16px;
+}
+h2, .h2 {
+  font-size: 22px;
+}
+
+#aff-dspace-footer{
+  /* background: url("https://lib.afforum.org/themes/Mirage2/images/bg-infocus.jpg"); */
+  color: white;
+}
+#aff-dspace-footer a{color: white;}
+#aff-dspace-footer .card{border: none; background-color:transparent; padding:20px;}
+#aff-dspace-footer .card-header {}
+#aff-dspace-footer ul {
+  list-style:none;
+padding-left: 10px;
+}
+#aff-dspace-footer ul li a span {
+padding:4px;font-size:10px;
+}
+#aff-dspace-footer ul li::before {
+  display: inline-block;
+  margin-right: 0.2rem;
+}
+.label-default {
+  background-color: var(--dark-grey);
+}
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+color:white;
+}
+
+@media only screen and (min-width: 992px){
+  header .navbar-default, .trail-wrapper {
+  width: 1170px;
+  }
+}
+
+@media only screen and (max-width: 712px){
+   header .navbar-default {
+   min-height: 110px;
+   background: none;
+   background-color: var(--dark-green);
+ }
+ #header-text{display:inline-block; max-width:250px;text-align:center;}
+  
+  
+}
+@media only screen and (max-width: 1200px){
+   #file_news_div_news {display:none;}
+}
+@media only screen and (max-width: 360px){
+   #header-text{margin-left: 59px;
+font-size: 14px;}
+}
+
+@media (min-width: 768px){
+.col-sm-offset-1 {
+  margin-left: 3.333%;}
+
+}

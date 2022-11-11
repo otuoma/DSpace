@@ -9,16 +9,14 @@ package org.dspace.app.util;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.dspace.content.*;
+import org.dspace.content.Collection;
 import org.dspace.content.factory.ContentServiceFactory;
 import org.dspace.content.service.CollectionService;
 import org.dspace.content.service.CommunityService;
@@ -119,12 +117,14 @@ public class SyndicationFeed
 
     // metadata field for Item dc:author field in entry's DCModule (no default)
     protected String dcDescriptionField = configurationService.getProperty("webui.feed.item.dc.description");
+    protected String dcAbstract = configurationService.getProperty("webui.feed.item.dc.description.abstract");
     protected String dcPublisherField = configurationService.getProperty("webui.feed.item.dc.publisher");
     protected String dcTypeField = configurationService.getProperty("webui.feed.item.dc.type");
     protected String dcURIField = configurationService.getProperty("webui.feed.item.dc.identifier.uri");
     protected String dcCitationField = configurationService.getProperty("webui.feed.item.dc.identifier.citation");
-    protected String dcDateIssuedField = configurationService.getProperty("webui.feed.item.dc.date.issued");
-    protected String dcSubjectField = configurationService.getProperty("webui.feed.item.dc.date.issued");
+    protected String dcSubjectField = configurationService.getProperty("webui.feed.item.dc.date.subject");
+    protected String dcRelationCountryField = configurationService.getProperty("webui.feed.item.dc.relation.country");
+    protected String dcRelationProgramField = configurationService.getProperty("webui.feed.item.dc.relation.program");
 
     // List of available mimetypes that we'll add to podcast feed. Multiple values separated by commas
     protected String[] podcastableMIMETypes =
@@ -149,8 +149,7 @@ public class SyndicationFeed
      * Constructor.
      * @param ui either "xmlui" or "jspui"
      */
-    public SyndicationFeed(String ui)
-    {
+    public SyndicationFeed(String ui) {
         feed = new SyndFeedImpl();
         uiType = ui;
         ContentServiceFactory contentServiceFactory = ContentServiceFactory.getInstance();
@@ -187,18 +186,14 @@ public class SyndicationFeed
         this.request = request;
 
         // dso is null for the whole site, or a search without scope
-        if (dso == null)
-        {
+        if (dso == null){
             defaultTitle = ConfigurationManager.getProperty("dspace.name");
             feed.setDescription(localize(labels, MSG_FEED_DESCRIPTION));
             objectURL = resolveURL(request, null);
             logoURL = ConfigurationManager.getProperty("webui.feed.logo.url");
-        }
-        else
-        {
+        } else {
             Bitstream logo = null;
-            if (dso.getType() == Constants.COLLECTION)
-            {
+            if (dso.getType() == Constants.COLLECTION) {
                 Collection col = (Collection)dso;
                 defaultTitle = col.getName();
                 feed.setDescription(collectionService.getMetadata(col, "short_description"));
@@ -208,8 +203,7 @@ public class SyndicationFeed
                     podcastFeed = true;
                 }
             }
-            else if (dso.getType() == Constants.COMMUNITY)
-            {
+            else if (dso.getType() == Constants.COMMUNITY) {
                 Community comm = (Community)dso;
                 defaultTitle = comm.getName();
                 feed.setDescription(communityService.getMetadata(comm, "short_description"));
@@ -233,8 +227,7 @@ public class SyndicationFeed
         feed.setUri(objectURL);
 
         // add logo if we found one:
-        if (logoURL != null)
-        {
+        if (logoURL != null) {
             // we use the path to the logo for this, the logo itself cannot
             // be contained in the rdf. Not all RSS-viewers show this logo.
             SyndImage image = new SyndImageImpl();
@@ -336,7 +329,50 @@ public class SyndicationFeed
                     entry.setAuthors(creators);
                 }
 
-                // only add DC module if any DC fields are configured
+                Map<String, List<MetadataValue>> orphanFields = new HashMap<>();
+
+                if (dcCitationField != null) {
+                    List<MetadataValue> dcCitations = itemService.getMetadataByMetadataString(item, dcCitationField);
+                    orphanFields.put("citations", dcCitations);
+                }
+                if (dcAbstract != null) {
+                    List<MetadataValue> dcAbstracts = itemService.getMetadataByMetadataString(item, dcAbstract);
+                    orphanFields.put("abstracts", dcAbstracts);
+                }
+//                Thumbnail thumbnail = itemService.getThumbnail(context, item, false);
+//                if (thumbnail != null){
+//                    orphanFields.put("thumbnail", thumbnail.getThumb().getName());
+//                }
+                if (dcRelationCountryField != null) {
+                    List<MetadataValue> dcRelationCountries = itemService.getMetadataByMetadataString(item, dcRelationCountryField);
+                    if (dcRelationCountries.size() > 0) {
+                        orphanFields.put("countries", dcRelationCountries);
+                    }
+                }
+                if (dcRelationProgramField != null) {
+                    List<MetadataValue> dcRelationPrograms = itemService.getMetadataByMetadataString(item, dcRelationProgramField);
+                    if (dcRelationPrograms.size() > 0) {
+                        orphanFields.put("programs", dcRelationPrograms);
+                    }
+                }
+                List<Bundle> bitstreamBundles = itemService.getBundles(item, Constants.DEFAULT_BUNDLE_NAME);
+                if (bitstreamBundles.size() > 0){
+                    Map<String, String> bitstreams = new HashMap<>();
+                    for (Bundle bundle: bitstreamBundles){
+                        List<Bitstream> fetchedBitstreams = bundle.getBitstreams();
+                        if (fetchedBitstreams.size() > 0){
+                            for (Bitstream bitstream : fetchedBitstreams) {
+                                String bitstreamName = bitstream.getName();
+                                String bitstreamHandle = bitstream.getHandle();
+                                bitstreams.put(bitstreamName, urlOfBitstream(request, bitstream));
+                            }
+                        }
+                    }
+                }
+
+                entry.setForeignMarkup(orphanFields);
+
+                // ADD DC fields that are defined ###
                 DCModule dc = new DCModuleImpl();
                 if (dcCreatorField != null) {
                     List<MetadataValue> dcAuthors = itemService.getMetadataByMetadataString(item, dcCreatorField);
@@ -348,6 +384,16 @@ public class SyndicationFeed
                         dc.setCreators(creators);
                     }
                 }
+                if (dcTypeField != null) {
+                    List<MetadataValue> dcTypes = itemService.getMetadataByMetadataString(item, dcTypeField);
+                    if (dcTypes.size() > 0) {
+                        List<String> types = new ArrayList<String>();
+                        for (MetadataValue itemType : dcTypes) {
+                            types.add(itemType.getValue());
+                        }
+                        dc.setTypes(types);
+                    }
+                }
                 if (dcURIField != null) {
                     List<MetadataValue> dcURIs = itemService.getMetadataByMetadataString(item, dcURIField);
                     if (dcURIs.size() > 0) {
@@ -355,7 +401,7 @@ public class SyndicationFeed
                         for (MetadataValue uri : dcURIs) {
                             URIs.add(uri.getValue());
                         }
-                        dc.setSubjects(URIs);
+                        dc.setIdentifiers(URIs);
                     }
                 }
                 if (dcSubjectField != null) {
@@ -368,6 +414,7 @@ public class SyndicationFeed
                         dc.setSubjects(subjects);
                     }
                 }
+
                 if (dcDateField != null && !hasDate) {
                     List<MetadataValue> v = itemService.getMetadataByMetadataString(item, dcDateField);
                     if (v.size() > 0) {
@@ -387,14 +434,16 @@ public class SyndicationFeed
                         dc.setDescription(descs.toString());
                     }
                 }
-                List<Bundle> bitstreamBundles = itemService.getBundles(item, Constants.DEFAULT_BUNDLE_NAME);
-                if (bitstreamBundles.size() > 0){
-                    for (Bundle bundle: bitstreamBundles){
-                        Bitstream primaryBitstream = bundle.getPrimaryBitstream();
-                        String bitstreamName = primaryBitstream.getName();
-                        String bitstreamURL = primaryBitstream.getHandle();
-                    }
 
+                if (dcPublisherField != null) {
+                    List<MetadataValue> dcPublishers = itemService.getMetadataByMetadataString(item, dcPublisherField);
+                    if (dcPublishers.size() > 0) {
+                        List<String> publishers = new ArrayList<String>();
+                        for (MetadataValue publisher : dcPublishers) {
+                            publishers.add(publisher.getValue());
+                        }
+                        dc.setPublishers(publishers);
+                    }
                 }
 
                 entry.getModules().add(dc);

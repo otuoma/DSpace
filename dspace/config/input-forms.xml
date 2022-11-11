@@ -159,7 +159,7 @@ it, please enter the types and the actual numbers or codes.</hint>
          <dc-element>subject</dc-element>
          <dc-qualifier></dc-qualifier>
          <!-- An input-type of twobox MUST be marked as repeatable -->
-         <repeatable>true</repeatable>
+         <repeatable>true</repeatable>
          <label>Subject Keywords</label>
          <input-type>twobox</input-type>
          <hint>Enter appropriate subject keywords or phrases. </hint>
@@ -262,11 +262,7 @@ it, please enter the types and the actual numbers or codes.</hint>
 
    <value-pairs value-pairs-name="common_types" dc-term="type">
      <pair>
-       <displayed-value>Animation</displayed-value>
-       <stored-value>Animation</stored-value>
-     </pair>
-     <pair>
-       <displayed-value>Article</displayed-value>
+       <displayed-value>Journal Article</displayed-value>
        <stored-value>Article</stored-value>
      </pair>
      <pair>
@@ -274,16 +270,24 @@ it, please enter the types and the actual numbers or codes.</hint>
        <stored-value>Book</stored-value>
      </pair>
      <pair>
+       <displayed-value>Monograph</displayed-value>
+       <stored-value>Monograph</stored-value>
+     </pair>
+     <pair>
        <displayed-value>Book chapter</displayed-value>
        <stored-value>Book chapter</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>Compendia</displayed-value>
+       <stored-value>Compendia</stored-value>
      </pair>
      <pair>
        <displayed-value>Dataset</displayed-value>
        <stored-value>Dataset</stored-value>
      </pair>
      <pair>
-       <displayed-value>Learning Object</displayed-value>
-       <stored-value>Learning Object</stored-value>
+       <displayed-value>Factsheet</displayed-value>
+       <stored-value>Factsheet</stored-value>
      </pair>
      <pair>
        <displayed-value>Image</displayed-value>
@@ -302,8 +306,16 @@ it, please enter the types and the actual numbers or codes.</hint>
        <stored-value>Musical Score</stored-value>
      </pair>
      <pair>
+       <displayed-value>Newsletter</displayed-value>
+       <stored-value>Newsletter</stored-value>
+     </pair>
+     <pair>
        <displayed-value>Plan or blueprint</displayed-value>
        <stored-value>Plan or blueprint</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>Policy brief</displayed-value>
+       <stored-value>Policy brief</stored-value>
      </pair>
      <pair>
        <displayed-value>Preprint</displayed-value>
@@ -312,6 +324,10 @@ it, please enter the types and the actual numbers or codes.</hint>
      <pair>
        <displayed-value>Presentation</displayed-value>
        <stored-value>Presentation</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>Proceedings</displayed-value>
+       <stored-value>Proceedings</stored-value>
      </pair>
      <pair>
        <displayed-value>Recording, acoustical</displayed-value>
@@ -326,6 +342,10 @@ it, please enter the types and the actual numbers or codes.</hint>
        <stored-value>Recording, oral</stored-value>
      </pair>
      <pair>
+       <displayed-value>Report</displayed-value>
+       <stored-value>Report</stored-value>
+     </pair>
+     <pair>
        <displayed-value>Software</displayed-value>
        <stored-value>Software</stored-value>
      </pair>
@@ -336,6 +356,10 @@ it, please enter the types and the actual numbers or codes.</hint>
      <pair>
        <displayed-value>Thesis</displayed-value>
        <stored-value>Thesis</stored-value>
+     </pair>
+     <pair>
+       <displayed-value>Training module</displayed-value>
+       <stored-value>Training module</stored-value>
      </pair>
      <pair>
        <displayed-value>Video</displayed-value>
