@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -156,7 +157,8 @@ public class ItemsResource extends Resource
             @Context HttpHeaders headers, @Context HttpServletRequest request) throws WebApplicationException
     {
 
-        LocalDate lastModified = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        Date lastModified = java.sql.Date.valueOf(localDate);
 
         log.info("Reading items.(offset=" + offset + ",limit=" + limit + ",last_modified=" + lastModified + ").");
         org.dspace.core.Context context = null;
