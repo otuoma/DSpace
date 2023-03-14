@@ -33,6 +33,8 @@ import javax.ws.rs.core.Response.Status;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -148,11 +150,13 @@ public class ItemsResource extends Resource
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON })
     public Item[] getItems(@QueryParam("expand") String expand, @QueryParam("limit") @DefaultValue("100") Integer limit,
-                           @QueryParam("last_modified") @DefaultValue("1900-01-01") Date lastModified,
+                           @QueryParam("last_modified") @DefaultValue("2018-05-05") String date,
             @QueryParam("offset") @DefaultValue("0") Integer offset, @QueryParam("userIP") String user_ip,
             @QueryParam("userAgent") String user_agent, @QueryParam("xforwardedfor") String xforwardedfor,
             @Context HttpHeaders headers, @Context HttpServletRequest request) throws WebApplicationException
     {
+
+        LocalDate lastModified = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         log.info("Reading items.(offset=" + offset + ",limit=" + limit + ",last_modified=" + lastModified + ").");
         org.dspace.core.Context context = null;
