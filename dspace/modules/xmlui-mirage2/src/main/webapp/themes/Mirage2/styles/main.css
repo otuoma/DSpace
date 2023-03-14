@@ -3724,8 +3724,7 @@ tbody.collapse.in {
       background-color: transparent; }
   .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
     color: #fff;
-    background-color: #122538; 
-}
+    background-color: #122538; }
   .navbar-inverse .navbar-nav > .disabled > a, .navbar-inverse .navbar-nav > .disabled > a:hover, .navbar-inverse .navbar-nav > .disabled > a:focus {
     color: #444;
     background-color: transparent; }
@@ -3753,8 +3752,7 @@ tbody.collapse.in {
         background-color: transparent; }
     .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {
       color: #fff;
-      background-color: #122538;
-}
+      background-color: #122538; }
     .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus {
       color: #444;
       background-color: transparent; } }
@@ -5625,8 +5623,7 @@ header .navbar-default {
       background-color: #eee; }
     header .navbar-default .navbar-toggle:hover, header .navbar-default .navbar-toggle:focus, header .navbar-default .navbar-nav:hover, header .navbar-default .navbar-nav:focus {
       color: #fff;
-      background-color: none;
-}
+      background-color: #122538; }
     header .navbar-default .navbar-toggle > li > a, header .navbar-default .navbar-nav > li > a {
       color: #eee; }
       header .navbar-default .navbar-toggle > li > a:hover, header .navbar-default .navbar-toggle > li > a:focus, header .navbar-default .navbar-nav > li > a:hover, header .navbar-default .navbar-nav > li > a:focus {

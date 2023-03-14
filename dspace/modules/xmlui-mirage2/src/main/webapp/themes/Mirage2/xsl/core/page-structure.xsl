@@ -96,6 +96,36 @@
                                     </div>
                                 </div>
                             </div>
+    <!-- Citation POPUP MODAL -->
+
+               <div role="dialog" tabindex="-1" id="modalCita" class="modal">
+                  <div role="document" class="modal-dialog">
+                     <div id="modalCitacion" class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title">Citation</h5>
+                           <br/>
+                           <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true"></span></button>
+                           <div>
+                              <button id="btnCitaAPA" type="button" class="btn btn-default btn-xs">APA</button>
+                              <button id="btnCiteHarvard" type="button" class="btn btn-default btn-xs">Harvard</button>
+                              <button id="btnCitaIEEE" type="button" class="btn btn-default btn-xs">IEEE</button>
+                              <button id="btnCitaMLA" type="button" class="btn btn-default btn-xs">MLA</button>
+                              <button id="btnCitaChicago" type="button" class="btn btn-default btn-xs">Chicago</button>
+                              <button id="btnCitaVancouver" type="button" class="btn btn-default btn-xs">Vancouver</button>
+                           </div>
+                        </div>
+                        <div id="txtCitation" class="modal-body">
+                           N/A
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-default" data-dismiss="modal">
+                           Close
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+<!--    END Citation modal popup-->
 
                             <div id="main-container" class="container">
 
@@ -199,7 +229,10 @@
                     </xsl:attribute>
                 </link>
             </xsl:for-each>
-
+	    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+	    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"/>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"/>
             <link rel="stylesheet" href="{concat($theme-path, 'styles/main.css')}"/>
             <link rel="stylesheet" href="{concat($theme-path, 'styles/aff.css')}"/>
 
@@ -323,7 +356,11 @@
                 </script>
                 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">&#160;</script>
             </xsl:if>
-
+		
+                                       <script>
+                                          if(!window.DSpace){window.DSpace={}};
+                                          if(!window.DSpace.metadata){window.DSpace.metadata={}};
+                                       </script>
         </head>
     </xsl:template>
 
@@ -463,14 +500,14 @@
                                         </ul>
                                     </li>
                                 </xsl:when>
-                                <xsl:otherwise>
+                                <xsl:otherwise><!--
                                     <li>
                                         <a href="/register">
                                             <span class="hidden-xs">
                                                 <xsl:text>Register</xsl:text>
                                             </span>
                                         </a>
-                                    </li>
+                                    </li>-->
                                     <li>
                                         <a href="{/dri:document/dri:meta/dri:userMeta/
                             dri:metadata[@element='identifier' and @qualifier='loginURL']}">
@@ -807,6 +844,11 @@
                 </a>
 <!--            <p>&#160;</p>-->
         </footer>
+	<script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>
+        <script type='text/javascript' src='https://lib.afforum.org/themes/Mirage2/scripts/bibliographic-managers.js'></script>
+      <script>
+
+      </script>
     </xsl:template>
 
 

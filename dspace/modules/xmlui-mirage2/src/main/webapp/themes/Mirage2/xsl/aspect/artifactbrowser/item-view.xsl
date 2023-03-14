@@ -118,18 +118,251 @@
                     </div>
                     <xsl:call-template name="itemSummaryView-DIM-date"/>
                     <xsl:call-template name="itemSummaryView-DIM-authors"/>
+                    <xsl:call-template name="itemSummaryView-bibliographic-managers"/>
                     <xsl:if test="$ds_item_view_toggle_url != ''">
                         <xsl:call-template name="itemSummaryView-show-full"/>
                     </xsl:if>
+<!--                    <xsl:call-template name="itemSummaryView-altmetric-badge"/>-->
                 </div>
                 <div class="col-sm-8">
                     <xsl:call-template name="itemSummaryView-DIM-citation"/>
                     <xsl:call-template name="itemSummaryView-DIM-abstract"/>
                     <xsl:call-template name="itemSummaryView-DIM-URI"/>
                     <xsl:call-template name="itemSummaryView-collections"/>
+                    <xsl:call-template name="itemSummaryView-citation"/>
                 </div>
             </div>
+	    <xsl:variable name="primaryBitstream" select="//mets:structMap[@TYPE='LOGICAL']/mets:div[@TYPE='DSpace Item']/mets:fptr/@FILEID"/>
+	    <div class="row">
+		<div class="col-md-12">
+                   <xsl:call-template name="itemSummaryView-bitstream"/>
+		</div>
+	    </div>
         </div>
+    </xsl:template>
+<!--BIBLIOGRAPHIC MANAGERS -->
+    <xsl:template name="itemSummaryView-bibliographic-managers">
+	<div class="simple-item-view-authors item-page-field-wrapper table">
+	    <h5>Bibliographic Managers</h5>
+<!-- START RefWorks -->
+		<span id="refworks" style="display:none;">
+RT Generic <xsl:if test="count(dim:field[@element='title'][not(@qualifier)]) = 1">
+T1 <xsl:value-of select="dim:field[@element='title'][not(@qualifier)][1]/node()"/></xsl:if>
+<xsl:if test="dim:field[@element='contributor'][@qualifier='author']">
+A1 <xsl:for-each select="dim:field[@element='contributor'][@qualifier='author']">
+                            <xsl:copy-of select="node()"/><xsl:if test="count(following-sibling::dim:field[@element='contributor' and @qualifier='author']) != 0">,</xsl:if>
+                        </xsl:for-each>
+                    </xsl:if>
+<xsl:if test="dim:field[@element='date' and @qualifier='issued' and descendant::text()]">
+YR <xsl:for-each select="dim:field[@element='date' and @qualifier='issued']">
+                    <xsl:copy-of select="substring(./node(),1,10)"/>
+                    <xsl:if test="count(following-sibling::dim:field[@element='date' and @qualifier='issued']) != 0">
+                        <br/>
+                    </xsl:if>
+                </xsl:for-each>
+</xsl:if>
+<xsl:if test="dim:field[@element='identifier' and @qualifier='uri' and descendant::text()]">
+LK <xsl:for-each select="dim:field[@element='identifier' and @qualifier='uri']">
+<xsl:copy-of select="./node()"/>
+</xsl:for-each>
+</xsl:if>
+		</span>
+<!-- END RefWorks -->
+	    <div>
+	        <a id="refworks_export" href="" download="refworks.rfw">Refworks</a>
+	    </div>
+<!--START ZOTERO -->
+<span id="zotero" style="display:none;">
+TY - GEN <xsl:if test="count(dim:field[@element='title'][not(@qualifier)]) = 1">
+T1 - <xsl:value-of select="dim:field[@element='title'][not(@qualifier)][1]/node()"/></xsl:if>
+<xsl:if test="dim:field[@element='contributor'][@qualifier='author']">
+AU - <xsl:for-each select="dim:field[@element='contributor'][@qualifier='author']">
+<xsl:copy-of select="node()"/><xsl:if test="count(following-sibling::dim:field[@element='contributor' and @qualifier='author']) != 0">,</xsl:if>
+</xsl:for-each>
+</xsl:if>
+<xsl:if test="dim:field[@element='date' and @qualifier='issued' and descendant::text()]">
+Y1 - <xsl:for-each select="dim:field[@element='date' and @qualifier='issued']">
+                    <xsl:copy-of select="substring(./node(),1,10)"/>
+                    <xsl:if test="count(following-sibling::dim:field[@element='date' and @qualifier='issued']) != 0">
+                        <br/>
+                    </xsl:if>
+                </xsl:for-each>
+</xsl:if>
+<xsl:if test="dim:field[@element='identifier' and @qualifier='uri' and descendant::text()]">
+UR - <xsl:for-each select="dim:field[@element='identifier' and @qualifier='uri']">
+<xsl:copy-of select="./node()"/>
+</xsl:for-each>
+</xsl:if>
+ 
+</span>
+	    <div>
+	        <a id="zotero_export" href="" download="zotero.ris">Zotero</a>
+	    </div>
+<!-- END ZOTERO  -->
+<!-- START BIBTEX -->
+<span id="bibtext" style="display:none;">
+@misc{<xsl:for-each select="dim:field[@element='identifier' and @qualifier='uri']">
+<xsl:copy-of select="./node()"/>
+</xsl:for-each>
+
+<xsl:if test="dim:field[@element='contributor'][@qualifier='author']">
+author = { <xsl:for-each select="dim:field[@element='contributor'][@qualifier='author']">
+<xsl:copy-of select="node()"/><xsl:if test="count(following-sibling::dim:field[@element='contributor' and @qualifier='author']) != 0">,</xsl:if>
+</xsl:for-each>
+}</xsl:if>
+<xsl:if test="count(dim:field[@element='title'][not(@qualifier)]) = 1">
+title = {<xsl:value-of select="dim:field[@element='title'][not(@qualifier)][1]/node()"/>}
+</xsl:if>
+<xsl:if test="dim:field[@element='date' and @qualifier='issued' and descendant::text()]">
+year = {<xsl:for-each select="dim:field[@element='date' and @qualifier='issued']">
+                    <xsl:copy-of select="substring(./node(),1,10)"/>
+                    <xsl:if test="count(following-sibling::dim:field[@element='date' and @qualifier='issued']) != 0">,</xsl:if>
+                </xsl:for-each>}
+</xsl:if>
+<xsl:if test="dim:field[@element='identifier' and @qualifier='uri' and descendant::text()]">
+url = {<xsl:for-each select="dim:field[@element='identifier' and @qualifier='uri']">
+<xsl:copy-of select="./node()"/>
+</xsl:for-each>}
+</xsl:if>
+
+}
+</span>
+	    <div>
+	        <a id="bibtext_export" href="" download="bibtex.bib">BibTeX</a>
+	    </div>
+<!-- END BIBTEX -->
+<!-- START mendeley -->
+<span id="mendeley" style="display:none;">
+TY - GEN
+<xsl:if test="count(dim:field[@element='title'][not(@qualifier)]) = 1">
+T1 - <xsl:value-of select="dim:field[@element='title'][not(@qualifier)][1]/node()"/>
+</xsl:if>
+<xsl:if test="dim:field[@element='contributor'][@qualifier='author']">
+AU - <xsl:for-each select="dim:field[@element='contributor'][@qualifier='author']">
+<xsl:copy-of select="node()"/><xsl:if test="count(following-sibling::dim:field[@element='contributor' and @qualifier='author']) != 0">,</xsl:if>
+</xsl:for-each>
+</xsl:if>
+<xsl:if test="dim:field[@element='identifier' and @qualifier='uri' and descendant::text()]">
+UR - <xsl:for-each select="dim:field[@element='identifier' and @qualifier='uri']">
+<xsl:copy-of select="./node()"/>
+</xsl:for-each>
+</xsl:if>
+<xsl:if test="dim:field[@element='date' and @qualifier='issued' and descendant::text()]">
+Y1 - <xsl:for-each select="dim:field[@element='date' and @qualifier='issued']">
+                    <xsl:copy-of select="substring(./node(),1,10)"/>
+                    <xsl:if test="count(following-sibling::dim:field[@element='date' and @qualifier='issued']) != 0">
+                        <br/>
+                    </xsl:if>
+                </xsl:for-each>
+</xsl:if>
+
+</span>
+	    <div>
+	    	<a id="mendeley_export" href="" download="mendeley.ris">Mendeley, EndNote, etc.</a>
+	    </div>
+<!--END mendeley -->
+	</div>
+    </xsl:template>
+<!-- END BIBLIOGRAPHIC MANAGERS -->
+    <!-- Citation POPUP MODAL -->
+    <xsl:template name="itemSummaryView-citation-modal">
+	
+               <div role="dialog" tabindex="-1" id="modalCita" class="modal">
+                  <div role="document" class="modal-dialog">
+                     <div id="modalCitacion" class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title">Citation</h5>
+                           <br/>
+                           <button aria-label="Close" data-dismiss="modal" class="close" type="button"><span aria-hidden="true"></span></button>
+                           <div>
+                              <button id="btnCitaAPA" type="button" class="btn btn-default btn-xs">APA</button>
+                              <button id="btnCiteHarvard" type="button" class="btn btn-default btn-xs">Harvard</button>
+                              <button id="btnCitaIEEE" type="button" class="btn btn-default btn-xs">IEEE</button>
+                              <button id="btnCitaMLA" type="button" class="btn btn-default btn-xs">MLA</button>
+                              <button id="btnCitaChicago" type="button" class="btn btn-default btn-xs">Chicago</button>
+                              <button id="btnCitaVancouver" type="button" class="btn btn-default btn-xs">Vancouver</button>
+                           </div>
+                        </div>
+                        <div id="txtCitation" class="modal-body">
+                           N/A
+                        </div>
+                        <div class="modal-footer">
+                           <button type="button" class="btn btn-default" data-dismiss="modal">
+                           Close
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               </div>	
+    </xsl:template>
+
+    <!-- DISPLAY the Citation Button -->
+    <xsl:template name="itemSummaryView-citation">
+	<script src="/themes/Mirage2/scripts/loadjs.min.js"></script>
+	<script>
+            window.addEventListener('load', function(ev) { 
+                loadjs(window.DSpace.theme_path+'scripts/citation.js', function() { }); 
+            });
+        </script>
+	<div class="simple-item-view-authors item-page-field-wrapper table">
+	    <h5>Citation Tool</h5>
+	    <div>
+		<div class="item-page-field-wrapper table">
+		    <button id="btnCitation" type="button" class="btn btn-default" data-toggle="modal" data-target="#modalCita">
+                       Cite this document
+                    </button>
+		</div>
+	    </div>
+	</div>
+    </xsl:template>
+    <!-- DISPLAY the PDF in HTML -->
+    <xsl:template name="itemSummaryView-bitstream">
+
+        <div id="bitstreamWrapper">
+	    <h4>Document Viewer</h4>
+	    <p style="font-size: 13px;">Scroll down below to continue reading the document.</p>
+            <xsl:variable name="primaryBitstream" select="//mets:structMap[@TYPE='LOGICAL']/mets:div[@TYPE='DSpace Item']/mets:fptr/@FILEID"/>
+            <xsl:for-each select="//mets:fileSec/mets:fileGrp[@USE='CONTENT' or @USE='ORIGINAL' or @USE='LICENSE']/mets:file">
+                <xsl:variable name="mimeType" select="@MIMETYPE" />
+                <xsl:variable name="bitstreamUrl" select="mets:FLocat[@LOCTYPE='URL']/@xlink:href" />
+                <xsl:if test="$mimeType = 'application/pdf' and contains(mets:FLocat[@LOCTYPE='URL']/@xlink:href,'isAllowed=y')">
+                    <xsl:element name="iframe">
+                        <xsl:attribute name="src">
+                            <xsl:value-of select="concat($theme-path, 'vendors/pdfjs-3/web/viewer.html?file=', $bitstreamUrl)" />
+                        </xsl:attribute>
+                        <xsl:attribute name="style">
+			    <xsl:text>width:100%; height:450px; border:none;</xsl:text>
+                        </xsl:attribute>
+                    </xsl:element>
+                </xsl:if>
+            </xsl:for-each>
+        </div>
+
+    </xsl:template>
+    <xsl:template name="itemSummaryView-altmetric-badge">
+<!--	<div class='altmetric-embed' data-badge-type='donut' data-isbn="978-92-5-107249-3"></div>-->
+        <xsl:if test="dim:field[@element='identifier' and @qualifier='uri' and descendant::text()]">
+                    <xsl:for-each select="dim:field[@element='identifier' and @qualifier='uri']">
+                        <div>
+                            <xsl:attribute name="class">
+                                <xsl:text>altmetric-embed</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-badge-type">
+                                <xsl:text>donut</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-hide-no-mentions">
+                                <xsl:text>false</xsl:text>
+                            </xsl:attribute>
+                            <xsl:attribute name="data-uri">
+                                <xsl:copy-of select="./node()"/>
+                            </xsl:attribute>
+                        </div>
+                        <xsl:if test="count(following-sibling::dim:field[@element='identifier' and @qualifier='uri']) != 0">
+                            <br/>
+                        </xsl:if>
+                    </xsl:for-each>
+        </xsl:if>
+
     </xsl:template>
 
     <xsl:template name="itemSummaryView-DIM-title">
@@ -138,6 +371,11 @@
                 <h2 class="page-header first-page-header">
                     <xsl:value-of select="dim:field[@element='title'][not(@qualifier)][1]/node()"/>
                 </h2>
+                <script>
+                   if(!window.DSpace){window.DSpace={}};
+                   if(!window.DSpace.metadata){window.DSpace.metadata={}};
+                   window.DSpace.metadata.dc_title='<xsl:value-of select="dim:field[@element='title'][not(@qualifier)][1]/node()"/>';
+                </script>		
                 <div class="simple-item-view-other">
                     <p class="lead">
                         <xsl:for-each select="dim:field[@element='title'][not(@qualifier)]">
@@ -157,6 +395,12 @@
                 <h2 class="page-header first-page-header">
                     <xsl:value-of select="dim:field[@element='title'][not(@qualifier)][1]/node()"/>
                 </h2>
+                <script>
+                   if(!window.DSpace){window.DSpace={}};
+                   if(!window.DSpace.metadata){window.DSpace.metadata={}};
+                   window.DSpace.metadata.dc_title='<xsl:value-of select="dim:field[@element='title'][not(@qualifier)][1]/node()"/>';
+                </script>
+
             </xsl:when>
             <xsl:otherwise>
                 <h2 class="page-header first-page-header">
@@ -298,6 +542,13 @@
 	    <a href="{concat('/discover?filtertype=author&amp;filter_relational_operator=equals&amp;filter=',$author-string)}">
                <xsl:copy-of select="node()"/>
 	    </a>
+	    <script>
+               if(!window.DSpace){window.DSpace={}};
+               if(!window.DSpace.metadata){window.DSpace.metadata={}};
+               if(!window.DSpace.metadata.dc_creator){window.DSpace.metadata.dc_creator=[]};
+                                                  
+               window.DSpace.metadata.dc_creator.push('<xsl:copy-of select="node()"/>');
+            </script>
         </div>
     </xsl:template>
 
@@ -313,6 +564,11 @@
                             </xsl:attribute>
                             <xsl:copy-of select="./node()"/>
                         </a>
+			<script>
+                           if(!window.DSpace){window.DSpace={}};
+                           if(!window.DSpace.metadata){window.DSpace.metadata={}};
+                           window.DSpace.metadata.dc_identifier_uri='<xsl:copy-of select="./node()"/>';
+                        </script>
                         <xsl:if test="count(following-sibling::dim:field[@element='identifier' and @qualifier='uri']) != 0">
                             <br/>
                         </xsl:if>
@@ -326,10 +582,16 @@
         <xsl:if test="dim:field[@element='date' and @qualifier='issued' and descendant::text()]">
             <div class="simple-item-view-date word-break item-page-field-wrapper table">
                 <h5>
-                    <i18n:text>xmlui.dri2xhtml.METS-1.0.item-date</i18n:text>
+<!--                    <i18n:text>xmlui.dri2xhtml.METS-1.0.item-date</i18n:text>-->
+                    <i18n:text>Published</i18n:text>
                 </h5>
                 <xsl:for-each select="dim:field[@element='date' and @qualifier='issued']">
                     <xsl:copy-of select="substring(./node(),1,10)"/>
+                    <script>
+                       if(!window.DSpace){window.DSpace={}};
+                       if(!window.DSpace.metadata){window.DSpace.metadata={}};
+                       window.DSpace.metadata.dc_date_created='<xsl:copy-of select="substring(./node(),1,10)"/>';
+                    </script>
                     <xsl:if test="count(following-sibling::dim:field[@element='date' and @qualifier='issued']) != 0">
                         <br/>
                     </xsl:if>

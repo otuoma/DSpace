@@ -79,6 +79,7 @@ public interface ItemService extends DSpaceObjectService<Item>, DSpaceObjectLega
      * @throws SQLException if database error
      */
     public Iterator<Item> findAllUnfiltered(Context context) throws SQLException;
+    public Iterator<Item> findAllUnfiltered(Context context, Date lastModified) throws SQLException;
 
     /**
      * Find all the items in the archive by a given submitter. The order is

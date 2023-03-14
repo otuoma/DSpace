@@ -146,14 +146,15 @@ public class ItemsResource extends Resource
      *             problem with creating context of DSpace.
      */
     @GET
-    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON })
     public Item[] getItems(@QueryParam("expand") String expand, @QueryParam("limit") @DefaultValue("100") Integer limit,
+                           @QueryParam("last_modified") @DefaultValue("1900-01-01") Date lastModified,
             @QueryParam("offset") @DefaultValue("0") Integer offset, @QueryParam("userIP") String user_ip,
             @QueryParam("userAgent") String user_agent, @QueryParam("xforwardedfor") String xforwardedfor,
             @Context HttpHeaders headers, @Context HttpServletRequest request) throws WebApplicationException
     {
 
-        log.info("Reading items.(offset=" + offset + ",limit=" + limit + ").");
+        log.info("Reading items.(offset=" + offset + ",limit=" + limit + ",last_modified=" + lastModified + ").");
         org.dspace.core.Context context = null;
         List<Item> items = null;
 
@@ -161,7 +162,8 @@ public class ItemsResource extends Resource
         {
             context = createContext();
 
-            Iterator<org.dspace.content.Item> dspaceItems = itemService.findAllUnfiltered(context);
+//            Iterator<org.dspace.content.Item> dspaceItems = itemService.findAllUnfiltered(context);
+            Iterator<org.dspace.content.Item> dspaceItems = itemService.findAllUnfiltered(context, lastModified);
             items = new ArrayList<Item>();
 
             if (!((limit != null) && (limit >= 0) && (offset != null) && (offset >= 0)))

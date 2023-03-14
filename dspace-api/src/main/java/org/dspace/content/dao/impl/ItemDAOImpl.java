@@ -64,6 +64,7 @@ public class ItemDAOImpl extends AbstractHibernateDSODAO<Item> implements ItemDA
         return iterate(query);
     }
 
+
     @Override
     public Iterator<Item> findAll(Context context, boolean archived,
             boolean withdrawn, boolean discoverable, Date lastModified)
